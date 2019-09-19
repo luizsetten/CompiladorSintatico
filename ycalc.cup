@@ -1,0 +1,274 @@
+/*
+  This example comes from a short article series in the Linux 
+  Gazette by Richard A. Sevenich and Christopher Lopes, titled
+  "Compiler Construction Tools". The article series starts at
+
+  http://www.linuxgazette.com/issue39/sevenich.html
+
+  Small changes and updates to newest JFlex+Cup versions 
+  by Gerwin Klein
+*/
+
+/*
+  Commented By: Christopher Lopes
+  File Name: ycalc.cup
+  To Create: > java java_cup.Main < ycalc.cup
+*/
+   
+   
+/* ----------------------Preliminary Declarations Section--------------------*/
+   
+/* Import the class java_cup.runtime.*  */
+import java_cup.runtime.*;
+import java.util.*;
+import java.util.Stack;
+
+
+   
+/* Parser code to change the way the parser reports errors (include
+   line and column number of the error). */
+parser code {:
+
+/** table of declared symbols -- contains production parts indexed by name */
+private Hashtable<String, Integer> symT = new Hashtable<String, Integer>();
+      
+    /* Change the method report_error so it will display the line and
+       column of where the error occurred in the input as well as the
+       reason for the error which is passed into the method in the
+       String 'message'. */
+    public void report_error(String message, Object info) {
+   
+        /* Create a StringBuilder called 'm' with the string 'Error' in it. */
+        StringBuilder m = new StringBuilder("Error");
+   
+        /* Check if the information passed to the method is the same
+           type as the type java_cup.runtime.Symbol. */
+        if (info instanceof java_cup.runtime.Symbol) {
+            /* Declare a java_cup.runtime.Symbol object 's' with the
+               information in the object info that is being typecasted
+               as a java_cup.runtime.Symbol object. */
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+   
+            /* Check if the line number in the input is greater or
+               equal to zero. */
+            if (s.left >= 0) {                
+                /* Add to the end of the StringBuilder error message
+                   the line number of the error in the input. */
+                m.append(" in line "+(s.left+1));   
+                /* Check if the column number in the input is greater
+                   or equal to zero. */
+                if (s.right >= 0)                    
+                    /* Add to the end of the StringBuilder error message
+                       the column number of the error in the input. */
+                    m.append(", column "+(s.right+1));
+            }
+        }
+   
+        /* Add to the end of the StringBuilder error message created in
+           this method the message that was passed into this method. */
+        m.append(" : "+message);
+   
+        /* Print the contents of the StringBuilder 'm', which contains
+           an error message, out on a line. */
+        System.err.println(m);
+    }
+   
+    /* Change the method report_fatal_error so when it reports a fatal
+       error it will display the line and column number of where the
+       fatal error occurred in the input as well as the reason for the
+       fatal error which is passed into the method in the object
+       'message' and then exit.*/
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+:};
+   
+
+   
+/* ------------Declaration of Terminals and Non Terminals Section----------- */
+/* Terminals (tokens returned by the scanner). */
+terminal            PLUS, MINUS, TIMES, DIVIDE,  LPAREN, RPAREN, EQUALS, GREATER,LESS, PROGRAM, STARTPRG, ENDPRG, WRITELINE, DECLINT, DECFLOAT, RCOL, LCOL;
+terminal            IFF, E, OU, THENN, ELSEE, ENDELSE, ATTRIB, PARA, DE, ATE, LEIA, FIMPARA, ENQUANTO, FUNCAO, FUNCAOINI, FUNCAOFIM, PASSO, FACA, FIMENQUANTO;
+terminal String	  ID;
+terminal Integer    NUMBER;        // our scanner provides numbers as integers
+
+/* Non terminals */
+non terminal            s, lista_funcao, call_func, param_func,  list_command, command,expr_part, expr_list, assign, leiaa, list_param, param, writel, declare_variable, iff, enquanto, vector, list_vector, func, type, paraa;
+non terminal Integer    expr;      // used to store evaluated subexpressions
+
+/* Precedences */
+precedence left ID,ATTRIB;
+precedence left DECLINT,DECFLOAT;
+precedence left ID,FUNCAO;
+precedence left ID;
+precedence left NUMBER;
+precedence left EQUALS;
+precedence right THENN, ELSEE ;
+precedence left GREATER, LESS;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE;
+precedence left LPAREN, RPAREN;
+
+
+
+/*java -jar JFlex.jar lcalc.flex
+%left T_E T_OUFIMENQUANTO
+%left T_IGUAL
+%left T_MAIOR T_MENOR
+%left T_MAIS T_MENOS
+%left T_VEZES T_DIV*/
+
+/* The grammar rules */
+
+s ::= lista_funcao
+            PROGRAM  
+            STARTPRG 
+            list_command 
+            ENDPRG   
+            ;
+
+list_command ::= list_command command
+               | command
+               ;
+
+
+
+leiaa    ::= LEIA
+            ID
+            ;    
+
+list_vector ::= list_vector vector
+               | vector
+               ;
+
+
+vector ::= ID
+           LCOL
+           NUMBER
+           RCOL
+           ;
+
+command ::=    declare_variable  
+            |  assign            
+            |  writel            
+            |  iff
+            |  enquanto
+            |  paraa
+            |  leiaa               
+            ;
+
+writel      ::= WRITELINE expr_part
+            ;
+
+iff         ::= IFF expr_list 
+                THENN 
+                list_command
+                ELSEE
+                list_command
+                ENDELSE
+            ;
+
+   
+declare_variable ::= type assign
+                  | type list_vector
+                  | type ID
+                    ;
+
+
+assign		::= ID
+                ATTRIB 
+                expr_list
+                | vector 
+                ATTRIB 
+                expr_list
+                | ID 
+                ATTRIB
+                call_func
+                ;
+
+
+expr_list ::= expr_list expr_part 
+	         | expr_part
+            ;
+
+
+expr_part ::= expr
+	        ;
+
+
+expr      ::= expr PLUS expr   
+	        | expr MINUS expr    
+           | expr TIMES expr 
+	        | expr DIVIDE expr 
+           | expr GREATER expr
+           | expr EQUALS expr
+           | expr LESS expr
+           | LPAREN expr RPAREN  
+           | ID
+           | NUMBER
+	        ;
+
+call_func ::= ID
+               LPAREN
+               param_func
+               RPAREN
+               ;
+
+param_func ::= param_func expr_part
+               | param_func vector
+               |
+               ;
+
+enquanto  ::= ENQUANTO expr_list
+              FACA
+              list_command
+              FIMENQUANTO
+             ;
+
+paraa   ::= PARA
+            ID
+            DE
+            NUMBER
+            ATE
+            NUMBER
+            PASSO
+            NUMBER
+            FACA
+            list_command
+            FIMPARA
+            ;
+
+
+type ::=   DECFLOAT
+         | DECLINT
+         ;
+
+
+lista_funcao ::=  lista_funcao func  
+                  | func
+                  | /*empty*/
+                  ;
+
+
+func ::= FUNCAO 
+         type 
+         ID 
+         LPAREN 
+         list_param 
+         RPAREN
+         FUNCAOINI 
+         list_command 
+         FUNCAOFIM
+         ;
+
+
+param ::= type 
+          ID
+          ;
+
+
+list_param ::= list_param param 
+               | param
+               | /*empty*/
+               ;

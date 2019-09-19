@@ -1,0 +1,54 @@
+programa
+inicio
+    inteiro p[10]
+    inteiro q <- 6
+    flutuante r
+   
+    p[1] <- 5
+
+    flutuante s <- t1() 
+    p <- f()
+    
+    p <- q / (5 + 1)
+    r <- 26 * (r - 2)
+    
+    escreva (p + q) * p
+    escreva r + 2 - c * 3
+
+    t <- 83 + 2
+
+    leia g
+    leia h 
+
+    a <- a + b
+
+    se p > q entao
+	   escreva r
+      se r = 58 entao
+         escreva p
+      senao
+         escreva q
+      fimse
+    senao
+	   escreva r / 2
+    fimse
+
+    
+    s <- a()
+    inteiro s <- b ()
+  
+
+    para i de 1 ate 10 passo 1 faca
+      escreva i
+    fimpara
+
+    enquanto (a > c e b > c) ou c > a faca
+      escreva a * 10
+      a <- a - 1
+    fimenquanto
+
+    // oi
+
+    /* teste comment */
+   
+fim
