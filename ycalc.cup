@@ -89,16 +89,16 @@ private Hashtable<String, Integer> symT = new Hashtable<String, Integer>();
 /* ------------Declaration of Terminals and Non Terminals Section----------- */
 /* Terminals (tokens returned by the scanner). */
 terminal            PLUS, MINUS, TIMES, DIVIDE,  LPAREN, RPAREN, EQUALS, GREATER,LESS, PROGRAM, STARTPRG, ENDPRG, WRITELINE, DECLINT, DECFLOAT, RCOL, LCOL;
-terminal            IFF, E, OU, THENN, ELSEE, ENDELSE, ATTRIB, PARA, DE, ATE, LEIA, FIMPARA, ENQUANTO, FUNCAO, FUNCAOINI, FUNCAOFIM, PASSO, FACA, FIMENQUANTO;
+terminal            IFF, EE, OUU, THENN, ELSEE, ENDELSE, ATTRIB, PARA, DE, ATE, LEIA, FIMPARA, ENQUANTO, FUNCAO, FUNCAOINI, FUNCAOFIM, PASSO, FACA, FIMENQUANTO;
 terminal String	  ID;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
 
 /* Non terminals */
-non terminal            s, lista_funcao, call_func, param_func,  list_command, command,expr_part, expr_list, assign, leiaa, list_param, param, writel, declare_variable, iff, enquanto, vector, list_vector, func, type, paraa;
+non terminal            s, lista_funcao, expr_ou_e, call_func, param_func,  list_command, command,expr_part, expr_list, assign, leiaa, list_param, param, writel, declare_variable, iff, enquanto, vector, list_vector, func, type, paraa;
 non terminal Integer    expr;      // used to store evaluated subexpressions
 
 /* Precedences */
-precedence left ID,ATTRIB;
+
 precedence left DECLINT,DECFLOAT;
 precedence left ID,FUNCAO;
 precedence left ID;
@@ -108,7 +108,9 @@ precedence right THENN, ELSEE ;
 precedence left GREATER, LESS;
 precedence left PLUS, MINUS;
 precedence left TIMES, DIVIDE;
+precedence left EE,OUU;
 precedence left LPAREN, RPAREN;
+precedence left ATTRIB;
 
 
 
@@ -194,9 +196,13 @@ expr_list ::= expr_list expr_part
 
 
 expr_part ::= expr
+            /* | expr_ou_e */
 	        ;
 
-
+/* expr_ou_e ::= expr EE expr
+            | expr OUU expr
+            ;
+ */
 expr      ::= expr PLUS expr   
 	        | expr MINUS expr    
            | expr TIMES expr 
@@ -204,23 +210,26 @@ expr      ::= expr PLUS expr
            | expr GREATER expr
            | expr EQUALS expr
            | expr LESS expr
+           | expr EE expr
+           | expr OUU expr
            | LPAREN expr RPAREN  
            | ID
            | NUMBER
 	        ;
 
 call_func ::= ID
-               LPAREN
-               param_func
-               RPAREN
-               ;
+            LPAREN
+            param_func
+            RPAREN
+            ;
 
-param_func ::= param_func expr_part
+param_func ::= param_func expr
                | param_func vector
+               | param_func call_func
                |
                ;
 
-enquanto  ::= ENQUANTO expr_list
+enquanto  ::= ENQUANTO expr_part
               FACA
               list_command
               FIMENQUANTO

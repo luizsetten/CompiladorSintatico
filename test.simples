@@ -6,11 +6,12 @@ inicio
    
     p[1] <- 5
 
-    flutuante s <- t1() 
+    flutuante s <- t1(a b c[2]) 
     p <- f()
     
-    p <- q / (5 + 1)
     r <- 26 * (r - 2)
+    p <- q / (5 + 1)
+   
     
     escreva (p + q) * p
     escreva r + 2 - c * 3
