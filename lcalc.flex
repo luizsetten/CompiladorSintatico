@@ -94,11 +94,12 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
    one and nine followed by zero or more numbers between zero and nine
    or just a zero.  */
 dec_int_lit = 0 | [1-9][0-9]*
-   
+dec_float_lit =  [0-9][0-9]*.[0-9][0-9]*
 /* A identifier integer is a word beginning a letter between A and
    Z, a and z, or an underscore followed by zero or more letters
    between A and Z, a and z, zero and nine, or an underscore. */
 dec_int_id = [A-Za-z_][A-Za-z_0-9]*
+
    
 %%
 /* ------------------------Lexical Rules Section---------------------- */
@@ -122,15 +123,17 @@ dec_int_id = [A-Za-z_][A-Za-z_0-9]*
     "+"                {  return symbol(sym.PLUS);     }
     "-"                {  return symbol(sym.MINUS);    }
     "*"                {  return symbol(sym.TIMES);    }
-    "/"                {  return symbol(sym.DIVIDE);   }
-    "["                {  return symbol(sym.LCOL);   }
-    "]"                {  return symbol(sym.RCOL);   }
+    "div"                {  return symbol(sym.DIVIDE);   }
+    "["                {  return symbol(sym.LCOL);     }
+    "]"                {  return symbol(sym.RCOL);     }
     "("                {  return symbol(sym.LPAREN);   }
     ")"                {  return symbol(sym.RPAREN);   }
     "<-"               {  return symbol(sym.ATTRIB);   }
     "="                {  return symbol(sym.EQUALS);   }
     ">"                {  return symbol(sym.GREATER);  }
     "<"                {  return symbol(sym.LESS);     }
+    ";"                {  return symbol(sym.SEMI);     }
+               
     "escreva"          {  return symbol(sym.WRITELINE);}
     "programa"         {  return symbol(sym.PROGRAM);  }
     "inicio"           {  return symbol(sym.STARTPRG); }
@@ -155,6 +158,7 @@ dec_int_id = [A-Za-z_][A-Za-z_0-9]*
     "funcao"           {  return symbol(sym.FUNCAO);   }
     "e"                {  return symbol(sym.EE);        }
     "ou"               {  return symbol(sym.OUU);       }
+    "retorno"               {  return symbol(sym.RETORNO);       }
    
     /* If an integer is found print it out, return the token NUMBER
        that represents an integer and the value of the integer that is
@@ -162,6 +166,9 @@ dec_int_id = [A-Za-z_][A-Za-z_0-9]*
        before returning */
     {dec_int_lit}      { /* System.out.print(yytext()); */
                          return symbol(sym.NUMBER, new Integer(yytext())); }
+   
+    {dec_float_lit}      { /* System.out.print(yytext()); */
+                         return symbol(sym.FLOAT, new Float(yytext())); }
    
     /* If an identifier is found print it out, return the token ID
        that represents an identifier and the default value one that is

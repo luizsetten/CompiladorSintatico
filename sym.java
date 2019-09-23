@@ -6,50 +6,54 @@
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int ATTRIB = 25;
-  public static final int DIVIDE = 5;
-  public static final int FUNCAO = 32;
-  public static final int FIMENQUANTO = 37;
-  public static final int DE = 27;
-  public static final int EQUALS = 8;
-  public static final int FUNCAOFIM = 34;
-  public static final int LPAREN = 6;
-  public static final int GREATER = 9;
-  public static final int FUNCAOINI = 33;
-  public static final int OUU = 21;
-  public static final int LESS = 10;
-  public static final int MINUS = 3;
-  public static final int PASSO = 35;
-  public static final int RPAREN = 7;
-  public static final int THENN = 22;
-  public static final int RCOL = 17;
-  public static final int ATE = 28;
-  public static final int ENDPRG = 13;
+  public static final int ATTRIB = 27;
+  public static final int DIVIDE = 6;
+  public static final int FUNCAO = 34;
+  public static final int FIMENQUANTO = 39;
+  public static final int DE = 29;
+  public static final int EQUALS = 9;
+  public static final int FUNCAOFIM = 36;
+  public static final int LPAREN = 7;
+  public static final int GREATER = 10;
+  public static final int SEMI = 23;
+  public static final int FUNCAOINI = 35;
+  public static final int OUU = 22;
+  public static final int LESS = 11;
+  public static final int MINUS = 4;
+  public static final int PASSO = 37;
+  public static final int RPAREN = 8;
+  public static final int THENN = 24;
+  public static final int RCOL = 18;
+  public static final int ATE = 30;
+  public static final int ENDPRG = 14;
   public static final int PLUS = 2;
-  public static final int ID = 38;
-  public static final int ELSEE = 23;
+  public static final int ID = 40;
+  public static final int ELSEE = 25;
+  public static final int RETORNO = 3;
   public static final int EOF = 0;
-  public static final int STARTPRG = 12;
-  public static final int ENDELSE = 24;
+  public static final int STARTPRG = 13;
+  public static final int ENDELSE = 26;
   public static final int error = 1;
-  public static final int PROGRAM = 11;
-  public static final int ENQUANTO = 31;
-  public static final int NUMBER = 39;
-  public static final int FIMPARA = 30;
-  public static final int FACA = 36;
-  public static final int TIMES = 4;
-  public static final int WRITELINE = 14;
-  public static final int LEIA = 29;
-  public static final int EE = 20;
-  public static final int DECLINT = 15;
-  public static final int LCOL = 18;
-  public static final int DECFLOAT = 16;
-  public static final int PARA = 26;
-  public static final int IFF = 19;
+  public static final int PROGRAM = 12;
+  public static final int ENQUANTO = 33;
+  public static final int NUMBER = 41;
+  public static final int FIMPARA = 32;
+  public static final int FACA = 38;
+  public static final int TIMES = 5;
+  public static final int WRITELINE = 15;
+  public static final int LEIA = 31;
+  public static final int EE = 21;
+  public static final int FLOAT = 42;
+  public static final int DECLINT = 16;
+  public static final int LCOL = 19;
+  public static final int DECFLOAT = 17;
+  public static final int PARA = 28;
+  public static final int IFF = 20;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "PLUS",
+  "RETORNO",
   "MINUS",
   "TIMES",
   "DIVIDE",
@@ -69,6 +73,7 @@ public class sym {
   "IFF",
   "EE",
   "OUU",
+  "SEMI",
   "THENN",
   "ELSEE",
   "ENDELSE",
@@ -86,7 +91,8 @@ public class sym {
   "FACA",
   "FIMENQUANTO",
   "ID",
-  "NUMBER"
+  "NUMBER",
+  "FLOAT"
   };
 }
 

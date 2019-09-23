@@ -88,13 +88,14 @@ private Hashtable<String, Integer> symT = new Hashtable<String, Integer>();
    
 /* ------------Declaration of Terminals and Non Terminals Section----------- */
 /* Terminals (tokens returned by the scanner). */
-terminal            PLUS, MINUS, TIMES, DIVIDE,  LPAREN, RPAREN, EQUALS, GREATER,LESS, PROGRAM, STARTPRG, ENDPRG, WRITELINE, DECLINT, DECFLOAT, RCOL, LCOL;
-terminal            IFF, EE, OUU, THENN, ELSEE, ENDELSE, ATTRIB, PARA, DE, ATE, LEIA, FIMPARA, ENQUANTO, FUNCAO, FUNCAOINI, FUNCAOFIM, PASSO, FACA, FIMENQUANTO;
+terminal            PLUS, RETORNO, MINUS, TIMES, DIVIDE,  LPAREN, RPAREN, EQUALS, GREATER,LESS, PROGRAM, STARTPRG, ENDPRG, WRITELINE, DECLINT, DECFLOAT, RCOL, LCOL;
+terminal            IFF, EE, OUU, SEMI, THENN, ELSEE, ENDELSE, ATTRIB, PARA, DE, ATE, LEIA, FIMPARA, ENQUANTO, FUNCAO, FUNCAOINI, FUNCAOFIM, PASSO, FACA, FIMENQUANTO;
 terminal String	  ID;
-terminal Integer    NUMBER;        // our scanner provides numbers as integers
+terminal Integer    NUMBER; 
+terminal Float      FLOAT; // our scanner provides numbers as integers
 
 /* Non terminals */
-non terminal            s, lista_funcao, expr_ou_e, call_func, param_func,  list_command, command,expr_part, expr_list, assign, leiaa, list_param, param, writel, declare_variable, iff, enquanto, vector, list_vector, func, type, paraa;
+non terminal            s, lista_funcao, retornoo, expr_ou_e, call_func, param_func,  list_command, command,expr_part, expr_list, assign, leiaa, list_param, param, writel, declare_variable, iff, enquanto, vector, list_vector, func, type, paraa;
 non terminal Integer    expr;      // used to store evaluated subexpressions
 
 /* Precedences */
@@ -137,7 +138,7 @@ list_command ::= list_command command
 
 
 leiaa    ::= LEIA
-            ID
+            ID SEMI
             ;    
 
 list_vector ::= list_vector vector
@@ -157,10 +158,12 @@ command ::=    declare_variable
             |  iff
             |  enquanto
             |  paraa
-            |  leiaa               
+            |  leiaa
+            |  call_func   
+            |  retornoo             
             ;
 
-writel      ::= WRITELINE expr_part
+writel      ::= WRITELINE expr_part SEMI
             ;
 
 iff         ::= IFF expr_list 
@@ -172,22 +175,26 @@ iff         ::= IFF expr_list
             ;
 
    
-declare_variable ::= type assign
-                  | type list_vector
-                  | type ID
+declare_variable ::= type assign 
+                  | type list_vector SEMI
+                  | type ID SEMI
                     ;
 
 
 assign		::= ID
                 ATTRIB 
-                expr_list
+                expr_list SEMI
                 | vector 
                 ATTRIB 
-                expr_list
+                expr_list SEMI
                 | ID 
                 ATTRIB
-                call_func
+                call_func 
+                | vector 
+                ATTRIB 
+                call_func 
                 ;
+
 
 
 expr_list ::= expr_list expr_part 
@@ -215,12 +222,13 @@ expr      ::= expr PLUS expr
            | LPAREN expr RPAREN  
            | ID
            | NUMBER
+           | FLOAT
 	        ;
 
 call_func ::= ID
             LPAREN
             param_func
-            RPAREN
+            RPAREN SEMI
             ;
 
 param_func ::= param_func expr
@@ -267,10 +275,22 @@ func ::= FUNCAO
          list_param 
          RPAREN
          FUNCAOINI 
-         list_command 
+         list_command
+         FUNCAOFIM
+         | FUNCAO 
+         ID 
+         LPAREN 
+         list_param 
+         RPAREN
+         FUNCAOINI 
+         list_command
          FUNCAOFIM
          ;
 
+retornoo ::= RETORNO 
+             expr_list
+             SEMI
+             ;
 
 param ::= type 
           ID
