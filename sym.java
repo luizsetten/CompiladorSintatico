@@ -16,14 +16,13 @@ public class sym {
   public static final int LPAREN = 6;
   public static final int GREATER = 9;
   public static final int FUNCAOINI = 33;
+  public static final int OUU = 21;
   public static final int LESS = 10;
   public static final int MINUS = 3;
   public static final int PASSO = 35;
-  public static final int E = 20;
   public static final int RPAREN = 7;
   public static final int THENN = 22;
   public static final int RCOL = 17;
-  public static final int OU = 21;
   public static final int ATE = 28;
   public static final int ENDPRG = 13;
   public static final int PLUS = 2;
@@ -41,6 +40,7 @@ public class sym {
   public static final int TIMES = 4;
   public static final int WRITELINE = 14;
   public static final int LEIA = 29;
+  public static final int EE = 20;
   public static final int DECLINT = 15;
   public static final int LCOL = 18;
   public static final int DECFLOAT = 16;
@@ -67,8 +67,8 @@ public class sym {
   "RCOL",
   "LCOL",
   "IFF",
-  "E",
-  "OU",
+  "EE",
+  "OUU",
   "THENN",
   "ELSEE",
   "ENDELSE",

@@ -153,8 +153,8 @@ dec_int_id = [A-Za-z_][A-Za-z_0-9]*
     "enquanto"         {  return symbol(sym.ENQUANTO); }
     "fimenquanto"      {  return symbol(sym.FIMENQUANTO); }
     "funcao"           {  return symbol(sym.FUNCAO);   }
-    "e"                {  return symbol(sym.E);        }
-    "ou"               {  return symbol(sym.OU);       }
+    "e"                {  return symbol(sym.EE);        }
+    "ou"               {  return symbol(sym.OUU);       }
    
     /* If an integer is found print it out, return the token NUMBER
        that represents an integer and the value of the integer that is
