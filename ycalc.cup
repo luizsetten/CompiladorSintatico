@@ -32,10 +32,7 @@ parser code {:
 /** table of declared symbols -- contains production parts indexed by name */
 private Hashtable<String, Integer> symT = new Hashtable<String, Integer>();
       
-    /* Change the method report_error so it will display the line and
-       column of where the error occurred in the input as well as the
-       reason for the error which is passed into the method in the
-       String 'message'. */
+
     public void report_error(String message, Object info) {
    
         /* Create a StringBuilder called 'm' with the string 'Error' in it. */
@@ -91,12 +88,12 @@ private Hashtable<String, Integer> symT = new Hashtable<String, Integer>();
 terminal            PLUS, RETORNO, MINUS, TIMES, DIVIDE,  LPAREN, RPAREN, EQUALS, GREATER,LESS, PROGRAM, STARTPRG, ENDPRG, WRITELINE, DECLINT, DECFLOAT, RCOL, LCOL;
 terminal            IFF, EE, OUU, SEMI, THENN, ELSEE, ENDELSE, ATTRIB, PARA, DE, ATE, LEIA, FIMPARA, ENQUANTO, FUNCAO, FUNCAOINI, FUNCAOFIM, PASSO, FACA, FIMENQUANTO;
 terminal String	  ID;
-terminal Integer    NUMBER; 
-terminal Float      FLOAT; // our scanner provides numbers as integers
+terminal String    NUMBER; 
+terminal String     FLOAT; // our scanner provides numbers as integers
 
 /* Non terminals */
-non terminal            s, lista_funcao, retornoo, expr_ou_e, call_func, param_func,  list_command, command,expr_part, expr_list, assign, leiaa, list_param, param, writel, declare_variable, iff, enquanto, vector, list_vector, func, type, paraa;
-non terminal Integer    expr;      // used to store evaluated subexpressions
+non terminal            s, lista_funcao, retornoo, expr_ou_e, call_func, param_func,  list_command, command,expr_part, expr_list, assign, leiaa, list_param, param, writel, declare_variable, iff, enquanto, vector, list_vector, func, paraa;
+non terminal String    expr, type;      // used to store evaluated subexpressions
 
 /* Precedences */
 
@@ -175,7 +172,7 @@ iff         ::= IFF expr_list
             ;
 
    
-declare_variable ::= type assign 
+declare_variable ::= type:t assign {:System.out.println(t); :} 
                   | type list_vector SEMI
                   | type ID SEMI
                     ;
@@ -183,10 +180,10 @@ declare_variable ::= type assign
 
 assign		::= ID
                 ATTRIB 
-                expr_list SEMI
+                expr SEMI
                 | vector 
                 ATTRIB 
-                expr_list SEMI
+                expr SEMI
                 | ID 
                 ATTRIB
                 call_func 
@@ -210,19 +207,19 @@ expr_part ::= expr
             | expr OUU expr
             ;
  */
-expr      ::= expr PLUS expr   
-	        | expr MINUS expr    
-           | expr TIMES expr 
-	        | expr DIVIDE expr 
-           | expr GREATER expr
-           | expr EQUALS expr
-           | expr LESS expr
-           | expr EE expr
-           | expr OUU expr
-           | LPAREN expr RPAREN  
-           | ID
-           | NUMBER
-           | FLOAT
+expr      ::= expr:e1 PLUS expr:e2  {: RESULT = e1 + "+" + e2; :} 
+	        | expr:e1 MINUS expr:e2    {: RESULT = e1 + "-" + e2; :}
+           | expr:e1 TIMES expr:e2  {: RESULT = e1 + "*" + e2; :}
+	        | expr:e1 DIVIDE expr:e2 {: RESULT = e1 + "/" + e2; :}
+           | expr:e1 GREATER expr:e2 {: RESULT = e1 + ">" + e2; :}
+           | expr:e1 EQUALS expr:e2 {: RESULT = e1 + "=" + e2; :}
+           | expr:e1 LESS expr:e2 {: RESULT = e1 + "<" + e2; :}
+           | expr:e1 EE expr:e2 {: RESULT = e1 + "&&" + e2; :}
+           | expr:e1 OUU expr:e2 {: RESULT = e1 + "||" + e2; :}
+           | LPAREN expr:e2 RPAREN  {: RESULT = "(" + e2 + ")"; :}
+           | ID:id {: RESULT = id;:}
+           | NUMBER:n {: RESULT = n; :}
+           | FLOAT:f {: RESULT = f; :}
 	        ;
 
 call_func ::= ID
@@ -257,8 +254,8 @@ paraa   ::= PARA
             ;
 
 
-type ::=   DECFLOAT
-         | DECLINT
+type ::=   DECFLOAT:t {:RESULT = "float";:}
+         | DECLINT:t {: RESULT = "int"; :}
          ;
 
 
